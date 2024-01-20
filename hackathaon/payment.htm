@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAYMENT SYSTEM </title>
+<link rel="stylesheet" href="addtocart.css">
+    <link rel="stylesheet" href="payment.css">
+    
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">ACES TECHFEST</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+           <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+           <ul class="navbar-nav mr-auto">
+           </ul>
+           <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="search" id="search_field"  placeholder="Search" aria-label="Search">
+           </form>
+           <button type="button" class="btn btn-success my-2 my-sm-0" data-toggle="modal"
+              data-target="#staticBackdrop">
+               <i class="fas fa-shopping-cart total-count"></i>
+           </button>
+        </div>
+     </nav>
+     
+<h1>SELECT ANY ONE OPTIONS FOR THE PAYEMENT</h1>
+<p> THE GIVEN METHOD ARE ALL THE MOST TRUSTABLE AND FAIR WEB PAYEMENT SYSTEM </p>
+<div id="container"></div>
+<script async
+  src="https://pay.google.com/gp/p/js/pay.js"
+  onload="onGooglePayLoaded()"></script>
+
+ <script>
+const baseRequest = {
+      apiVersion: 2,
+      apiVersionMinor: 0
+    };
+     const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"];
+     const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+     const tokenizationSpecification = {
+      type: 'PAYMENT_GATEWAY',
+      parameters: {
+        'gateway': 'example',
+        'gatewayMerchantId': 'exampleGatewayMerchantId'
+      }
+    };
+     const baseCardPaymentMethod = {
+      type: 'CARD',
+      parameters: {
+        allowedAuthMethods: allowedCardAuthMethods,
+        allowedCardNetworks: allowedCardNetworks
+      }
+    };
+    
+     const cardPaymentMethod = Object.assign(
+      {},
+      baseCardPaymentMethod,
+      {
+        tokenizationSpecification: tokenizationSpecification
+      }
+    );
+    
+     let paymentsClient = null;
+    
+     function getGoogleIsReadyToPayRequest() {
+      return Object.assign(
+          {},
+          baseRequest,
+          {
+            allowedPaymentMethods: [baseCardPaymentMethod]
+          }
+      );
+    }
+    
+     function getGooglePaymentDataRequest() {
+      const paymentDataRequest = Object.assign({}, baseRequest);
+      paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+      paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+      paymentDataRequest.merchantInfo = {
+         merchantName: 'Example Merchant'
+      };
+    
+      paymentDataRequest.callbackIntents = ["PAYMENT_AUTHORIZATION"];
+    
+      return paymentDataRequest;
+    }
+    
+     function getGooglePaymentsClient() {
+      if ( paymentsClient === null ) {
+        paymentsClient = new google.payments.api.PaymentsClient({
+            environment: 'TEST',
+          paymentDataCallbacks: {
+            onPaymentAuthorized: onPaymentAuthorized
+          }
+        });
+      }
+      return paymentsClient;
+    }
+    
+     function onPaymentAuthorized(paymentData) {
+      return new Promise(function(resolve, reject){
+        // handle the response
+        processPayment(paymentData)
+          .then(function() {
+            resolve({transactionState: 'SUCCESS'});
+          })
+          .catch(function() {
+            resolve({
+              transactionState: 'ERROR',
+              error: {
+                intent: 'PAYMENT_AUTHORIZATION',
+                message: 'Insufficient funds, try again. Next attempt should work.',
+                reason: 'PAYMENT_DATA_INVALID'
+              }
+            });
+            });
+      });
+    }
+    
+     function onGooglePayLoaded() {
+      const paymentsClient = getGooglePaymentsClient();
+      paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
+        .then(function(response) {
+          if (response.result) {
+            addGooglePayButton();
+          }
+        })
+        .catch(function(err) {
+      
+          console.error(err);
+        });
+    }
+    
+     function addGooglePayButton() {
+      const paymentsClient = getGooglePaymentsClient();
+      const button =
+          paymentsClient.createButton({onClick: onGooglePaymentButtonClicked});
+      document.getElementById('container').appendChild(button);
+    }
+    
+     function getGoogleTransactionInfo() {
+      return {
+            displayItems: [
+            {
+              label: "Subtotal",
+              type: "SUBTOTAL",
+              price: "11.00",
+            },
+          {
+              label: "Tax",
+              type: "TAX",
+              price: "1.00",
+            }
+        ],
+        countryCode: 'US',
+        currencyCode: "USD",
+        totalPriceStatus: "FINAL",
+        totalPrice: "12.00",
+        totalPriceLabel: "Total"
+      };
+    }
+    
+    
+     function onGooglePaymentButtonClicked() {
+      const paymentDataRequest = getGooglePaymentDataRequest();
+      paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+    
+      const paymentsClient = getGooglePaymentsClient();
+      paymentsClient.loadPaymentData(paymentDataRequest);
+    }
+    
+    let attempts = 0;
+     function processPayment(paymentData) {
+      return new Promise(function(resolve, reject) {
+        setTimeout(function() {
+          // @todo pass payment token to your gateway to process payment
+          paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+    
+                if (attempts++ % 2 == 0) {
+              reject(new Error('Every other attempt fails, next one should succeed'));      
+          } else {
+              resolve({});      
+          }
+        }, 500);
+      });
+    }
+    </script>
+    <div class="bank ">
+    <div id="prime">
+    <img src="primebank.png"></div>
+    <br>
+    <div src="laxmi">
+    <img src="laxmibank_download.png">
+    </div>
+    <br>
+    <div id="nic">
+    <img src="NIC_ASIA.png">
+    </div>

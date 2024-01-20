@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <div class="top_nav">
+        <div class="container top_nav_container">
+          <div class="top_nav_wrapper">
+             <a href="addtocart.html" class="top_nav_link">SHOP NOW</a>
+          </div>
+        </div>
+      </div>
+      <nav class="nav">x
+        <div class="container nav_container">
+          <a href="#" class="nav_logo">THE WASTE SYSTEM</a>
+          <ul class="nav_list">
+            <li class="nav_item"><a href="/" class="nav_link">Home</a></li>
+            <li class="nav_item"><a href="addtocart" class="nav_link"> BUY/SELL </a></li>
+            <li class="nav_item"><a href="receiver.html" class="nav_link">RECEIVER  </a></li>
+        
+              <li> <a href="sender.html"> SENDER </a></li>
+              <br>
+              <br>
+          </ul>
+          <div class="nav_items">
+            <form action="#" class="nav_form">
+              <input
+                type="text"
+                class="nav_input"
+                placeholder="search here...." />
+              <img src="./image/search.png" alt="" class="nav_search" />
+            </form>
+            <img src="./image/heart.png" alt="" class="nav_heart" />
+            <a href="addtocart.html">
+              <img src="./image/cart.png" alt="" class="nav_cart" />
+            </a>
+          </div>
+  
+    <body>
+        <div id="hello">
+            <input placeholder="Enter username..."
+                    type="text"
+                    id="username-input" /><br>
+                    <br>
+                    <br>
+            <button onclick="joinCall()">Join Call</button>
+        </div>
+        <div id="video-call-div">
+            <video muted id="local-video" autoplay></video>
+            <video id="remote-video" autoplay></video>
+            <div class="call-action-div">
+                <button onclick="muteVideo()">Mute Video</button>
+                <button onclick="muteAudio()">Mute Audio</button>
+            </div>
+        </div>
+        <script src="receiver.js"></script>
+    </body>
+
+</html>
